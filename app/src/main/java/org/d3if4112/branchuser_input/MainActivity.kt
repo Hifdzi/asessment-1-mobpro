@@ -1,5 +1,6 @@
 package org.d3if4112.branchuser_input
 
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
@@ -11,52 +12,83 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+//        setContentView(R.layout.activity_main)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.button.setOnClickListener { hitungBmi() }
+        binding.button.setOnClickListener { hitungJarak()
+        }
+        binding.button2.setOnClickListener { DataReset()
+        }
     }
-    private fun hitungBmi() {
-        val berat = binding.beratBadanInp.text.toString()
-        if (TextUtils.isEmpty(berat)) {
+
+    private fun hitungJarak() {
+        val jarak = binding.jarakTempuh.text.toString()
+        val hasilJarak = binding.jarakditempuh.text.toString()
+        val hasil = binding.jauhdekat.text.toString()
+        if (TextUtils.isEmpty(jarak)) {
             Toast.makeText(this, R.string.berat_invalid, Toast.LENGTH_LONG).show()
             return
         }
-            val tinggi = binding.tinggiBadanInp.text.toString()
-        if (TextUtils.isEmpty(tinggi)) {
-            Toast.makeText(this, R.string.tinggi_invalid, Toast.LENGTH_LONG).show()
-            return
-        }
-        val tinggiCm = tinggi.toFloat() / 100
+
+
         val selectedId = binding.radioGroup.checkedRadioButtonId
-        if (selectedId == -1) {
-            Toast.makeText(this, R.string.gender_invalid, Toast.LENGTH_LONG).show()
-            return
-        }
 
-        val isMale = selectedId == R.id.priaRadioButton
-        val bmi = berat.toFloat() / (tinggiCm * tinggiCm)
-        fun getKategori(bmi: Float, isMale: Boolean): String {
-            val stringRes = if (isMale) {
-                when {
-                    bmi < 20.5 -> R.string.kurus
-                    bmi >= 27.0 -> R.string.gemuk
-                    else -> R.string.ideal
-                }
-            } else {
-                when {
-                    bmi < 18.5 -> R.string.kurus
-                    bmi >= 25.0 -> R.string.gemuk
-                    else -> R.string.ideal
-                }
+        when {
+            TextUtils.isEmpty(jarak) -> {
+                Toast.makeText(this, R.string.jarak_invalid, Toast.LENGTH_LONG).show()
+                return
             }
-            return getString(stringRes)
+            selectedId == -1 -> {
+                Toast.makeText(this, R.string.kendaraan_invalid, Toast.LENGTH_LONG).show()
+                return
+            }
+            selectedId == R.id.jalankakiRadioButton -> {
+                if (jarak < 2.toString()) {
+                    binding.jarakditempuh.text = jarak
+                    binding.jauhdekat.text = "dekat"
+                } else{
+                    binding.jarakditempuh.text = jarak
+                    binding.jauhdekat.text = "jauh"
+                }
+                return
+            }
+            selectedId == R.id.mobilRadioButton -> {
+                if (jarak < 100.toString()) {
+                    binding.jarakditempuh.text = jarak
+                    binding.jauhdekat.text = "dekat"
+                } else{
+                    binding.jarakditempuh.text = jarak
+                    binding.jauhdekat.text = "jauh"
+                }
+                return
+
+            }
         }
 
-        val kategori = getKategori(bmi, isMale)
-        binding.bmiTextView.text = getString(R.string.bmi_x, bmi)
-        binding.kategoriTextView.text = getString(R.string.kategori_x, kategori)
 
+
+    }private fun DataReset() {
+        binding.jarakTempuh.text?.clear()
+        binding.radioGroup.clearCheck()
     }
 
-}
+//        fun getKategori(jarak: String, jalan_kaki: Boolean): String {
+//            val stringRes = if (jalan_kaki) {
+//                when {
+//                    jarak >= 2 -> R.string.jauh
+//                    else -> R.string.dekat
+//                }
+//            } else {
+//                when {
+//                    jarak >= 2 -> R.string.jauh
+//                    else -> R.string.dekat
+//                }
+//            }
+//            return getString(stringRes)
+//        }
+//
+//        val kategori = getKategori(jarak, jalan_kaki)
+//        binding.bmiTextView.text = getString(R.string.bmi_x, jarak)
+//        binding.kategoriTextView.text = getString(R.string.kategori_x, kategori)
+    }
+
